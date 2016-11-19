@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class World {
 
-    private static final int TIME_TO_SHOW_AN_ITEM = 100;
+    private static final int TIME_TO_SHOW_AN_ITEM = 200;
     private static final int TIME_TO_SHOW_AN_SPRING = 300;
 
     private static final int DEFAULT_PLATFORM_POSITION_WITH_SPRING = 0;
@@ -69,6 +69,7 @@ public class World {
             platform.tick();
         }
         platformBroken.tick();
+        player.tick();
         player.tick();
         base.tick();
         platformScrolling();
@@ -223,6 +224,7 @@ public class World {
                     && item.isCollidable()) {
                 System.out.println("Reached " + item);
                 //debug
+
                 item.setAlive(false);
                 FlyingItem.trigger(handler, item, player);
             }
@@ -361,6 +363,10 @@ public class World {
         this.score = score;
     }
 
+    public void addScore(int amount) {
+        this.score += amount;
+    }
+
     public Base getBase() {
         return base;
     }
@@ -383,6 +389,8 @@ public class World {
     }
 
     public void dispose() {
+
+
         base.dispose();
         player.dispose();
         spring.dispose();
@@ -391,6 +399,8 @@ public class World {
             platform.dispose();
         }
         font.dispose();
+        FlyingItem.instance.dispose();
+
     }
 
 }

@@ -2,6 +2,10 @@ package com.mygdx.game.gfx;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.entities.ItemAttributes;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Assets {
     public static TextureRegion background, base, platform_broken;
@@ -9,6 +13,10 @@ public class Assets {
     public static TextureRegion[] player_idle, player_jump, player_high, player_fall;
 
     public static TextureRegion[] playButton;
+
+    public static ItemAttributes[] attributes;
+
+    public static  ArrayList<ItemAttributes> itemTypes ;
 
 
     public static TextureRegion getFlipped(String path) {
@@ -53,6 +61,36 @@ public class Assets {
 
         playButton[0] = getFlipped("button/play.png");
         playButton[1] = getFlipped("button/play.png");
+
+        /*========================Item Attributes===========================*/
+        attributes = new ItemAttributes[]{
+                new ItemAttributes("food-01.png"),
+                new ItemAttributes("food-02.png"),
+                new ItemAttributes("food-03.png"),
+                new ItemAttributes("food-04.png"),
+                new ItemAttributes("Untitled-1-05.png"),
+                new ItemAttributes("Untitled-1-06.png"),
+                new ItemAttributes("Untitled-1-07.png"),
+                new ItemAttributes("Untitled-1-08.png"),
+                new ItemAttributes("Untitled-1-09.png"),
+                new ItemAttributes("Untitled-1-10.png"),
+                new ItemAttributes("Untitled-1-11.png"),
+                new ItemAttributes("Untitled-1-12.png"),
+                new ItemAttributes("Untitled-1-13.png"),
+                // item 14 looks like shit
+//            new ItemAttributes("Untitled-1-14.png"),
+                new ItemAttributes("Untitled-1-15.png"),
+                new ItemAttributes("Untitled-1-16.png"),
+                new ItemAttributes("Untitled-1-17.png"),
+                new ItemAttributes("Untitled-1-18.png"),
+                new ItemAttributes("Untitled-1-19.png"),
+                new ItemAttributes("Untitled-1-20.png"),
+                new ItemAttributes("Untitled-1-21.png"),
+                new ItemAttributes("Untitled-1-22.png")
+
+        };
+        itemTypes =  new ArrayList<ItemAttributes>(Arrays.asList(attributes));
+
     }
 
     public static void dispose() {
@@ -80,5 +118,12 @@ public class Assets {
 
         playButton[0].getTexture().dispose();
         playButton[1].getTexture().dispose();
+
+        for (ItemAttributes itemAttribute :
+                itemTypes) {
+            itemAttribute.dispose();
+        }
+
+
     }
 }

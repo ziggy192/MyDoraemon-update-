@@ -1,5 +1,7 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -36,5 +38,9 @@ public class ItemAttributes {
     @Override
     public String toString() {
         return name;
+    }
+
+    public void dispose() {
+        itemTextureRegion.getTexture().dispose();
     }
 }

@@ -13,6 +13,7 @@ public class GameState extends State {
         super(handler, gsm);
         world = new World(handler);
         handler.setWorld(world);
+
     }
 
     @Override

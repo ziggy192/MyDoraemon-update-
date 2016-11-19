@@ -27,9 +27,17 @@ public class PlatformBroken extends Entity {
     @Override
     public void render(SpriteBatch batch) {
         if (appear) {
+//            batch.draw(Assets.platform_broken,
+//                    x * handler.getWorld_to_scene_width(),
+//                    y * handler.getWorld_to_scene_height(),
+//                    width * handler.getWorld_to_scene_width(),
+//                    height * handler.getWorld_to_scene_height());
+
+
             batch.draw(Assets.platform_broken,
-                    (int) this.x, (int) this.y,
+                     this.x,  this.y,
                     this.width, this.height);
+//                    getSceneWidth(), getSceneHeight());
         }
     }
 

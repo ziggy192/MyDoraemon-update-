@@ -1,5 +1,7 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,6 +18,7 @@ public class FlyingItem extends Entity {
     private static final int SPEED = 5;
     private static final float DEFAULT_COLLISION_BOUNDS_SCALE = 0.5f;
     private static final float DEFAULT_TARGET_COLISSION_RANGE = 20f;
+    private static final int DEFAULT_BOUNUS = 200;
 
     private ItemAttributes itemAttributes;
     private Entity target;
@@ -26,6 +29,8 @@ public class FlyingItem extends Entity {
 
     private Vector2 velocity;
     boolean alive;
+
+    private Sound pickUpSound;
 
 
     public FlyingItem() {
@@ -42,6 +47,8 @@ public class FlyingItem extends Entity {
         //new
         flyingBounds = new Circle(x, y, itemTriggered.getWidth() / 2);
         targetBounds = new Circle(target.getMiddleX(), target.getMiddleY(), DEFAULT_TARGET_COLISSION_RANGE);
+
+        pickUpSound = Gdx.audio.newSound(Gdx.files.internal("Pickup_Coin.wav"));
 
         alive = isAlive;
     }
@@ -80,7 +87,12 @@ public class FlyingItem extends Entity {
 //            if (this.bounds.overlaps(getTargetCollisionBounds(target))) {
             if (this.flyingBounds.overlaps(targetBounds))
             {
+                pickUpSound.play(0.5f);
+
+                handler.getWorld().addScore(DEFAULT_BOUNUS);
+
                 setAlive(false);
+
                 //done colliding
             }
         }
@@ -100,7 +112,13 @@ public class FlyingItem extends Entity {
     @Override
     public void render(SpriteBatch batch) {
         if (isAlive()) {
+//            batch.draw(itemAttributes.getItemTextureRegion(), x, y,  getSceneWidth(), getSceneHeight());
+
             batch.draw(itemAttributes.getItemTextureRegion(), x, y, getWidth(), getHeight());
+//            batch.draw(itemAttributes.getItemTextureRegion(), x * handler.getWorld_to_scene_width(),
+//                    y * handler.getWorld_to_scene_height(),
+//                    width * handler.getWorld_to_scene_width(),
+//                    height * handler.getWorld_to_scene_height());
         }
 
     }
@@ -126,5 +144,13 @@ public class FlyingItem extends Entity {
     public void scroll(float vy) {
         if (isAlive())
             y -= vy;
+    }
+
+    public void dispose() {
+        if (pickUpSound != null) {
+
+            pickUpSound.dispose();
+        }
+
     }
 }

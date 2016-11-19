@@ -2,6 +2,7 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
+import com.mygdx.game.gfx.Assets;
 import com.mygdx.game.main.Handler;
 
 import java.util.ArrayList;
@@ -20,33 +21,8 @@ public class Item extends Entity {
 
 
 
-    private static final ItemAttributes[] attributes = new ItemAttributes[]{
-            new ItemAttributes("food-01.png"),
-            new ItemAttributes("food-02.png"),
-            new ItemAttributes("food-03.png"),
-            new ItemAttributes("food-04.png"),
-            new ItemAttributes("Untitled-1-05.png"),
-            new ItemAttributes("Untitled-1-06.png"),
-            new ItemAttributes("Untitled-1-07.png"),
-            new ItemAttributes("Untitled-1-08.png"),
-            new ItemAttributes("Untitled-1-09.png"),
-            new ItemAttributes("Untitled-1-10.png"),
-            new ItemAttributes("Untitled-1-11.png"),
-            new ItemAttributes("Untitled-1-12.png"),
-            new ItemAttributes("Untitled-1-13.png"),
-            // item 14 looks like shit
-//            new ItemAttributes("Untitled-1-14.png"),
-            new ItemAttributes("Untitled-1-15.png"),
-            new ItemAttributes("Untitled-1-16.png"),
-            new ItemAttributes("Untitled-1-17.png"),
-            new ItemAttributes("Untitled-1-18.png"),
-            new ItemAttributes("Untitled-1-19.png"),
-            new ItemAttributes("Untitled-1-20.png"),
-            new ItemAttributes("Untitled-1-21.png"),
-            new ItemAttributes("Untitled-1-22.png")
 
-    };
-    public static final ArrayList<ItemAttributes> itemTypes = new ArrayList<ItemAttributes>(Arrays.asList(attributes));
+
     private static final int DEFAULT_TYPE = 0;
 
     private Circle gravityCircle;
@@ -56,7 +32,7 @@ public class Item extends Entity {
 
     public Item(Handler handler, float x, float y, int type) {
         super(handler, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        if (type < itemTypes.size()) {
+        if (type < Assets.itemTypes.size()) {
             this.type = type;
         } else {
             this.type = DEFAULT_TYPE;
@@ -69,7 +45,7 @@ public class Item extends Entity {
 
     @Override
     public String toString() {
-        return itemTypes.get(type).toString();
+        return Assets.itemTypes.get(type).toString();
     }
 
     @Override
@@ -101,18 +77,25 @@ public class Item extends Entity {
     @Override
     public void render(SpriteBatch batch) {
         if (alive) {
-            batch.draw(itemTypes.get(type).getItemTextureRegion(), x, y, width, height);
+
+//            batch.draw(Assets.itemTypes.get(type).getItemTextureRegion(), x * handler.getWorld_to_scene_width(),
+//                    y * handler.getWorld_to_scene_height(),
+//                    width * handler.getWorld_to_scene_width(),
+//                    height * handler.getWorld_to_scene_height());
+            batch.draw(Assets.itemTypes.get(type).getItemTextureRegion(), x, y, width, height);
+
+//            batch.draw(Assets.itemTypes.get(type).getItemTextureRegion(), x, y,  getSceneWidth(), getSceneHeight());
         }
     }
 
     public void getNewRandomType() {
-        type = (int) (Math.random() * (itemTypes.size()));
+        type = (int) (Math.random() * (Assets.itemTypes.size()));
     }
 
     public void updateWithPlatform(Platform platform) {
 
-        setX(platform.getX() + (platform.getWidth() - DEFAULT_WIDTH) / 2);
-        setY(platform.getY() - DEFAULT_HEIGHT);
+        setX(platform.getX() + (platform.getWidth() - getWidth()) / 2);
+        setY(platform.getY() - getHeight());
         updateBounds();
         updateGravityCircle();
     }
@@ -127,15 +110,21 @@ public class Item extends Entity {
     }
 
     public ItemAttributes getItemAttributes() {
-        return itemTypes.get(type);
+        return Assets.itemTypes.get(type);
     }
 
 
     public static Item createRandomItemForPlatfrom(Handler handler, Platform platform) {
         return new Item(handler, platform.getX() + (platform.getWidth() - DEFAULT_WIDTH) / 2
                 , platform.getY() - DEFAULT_HEIGHT
-                , (int) (Math.random() * (itemTypes.size())));
+                , (int) (Math.random() * (Assets.itemTypes.size())));
     }
+
+    public void dispose() {
+
+    }
+
+
 
 
 }

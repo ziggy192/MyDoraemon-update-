@@ -24,6 +24,12 @@ public class DoremonJump extends ApplicationAdapter {
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
+
+		//debuging
+//		WIDTH = 400;
+//		HEIGHT = 800;
+
+
 		batch = new SpriteBatch();
 		Assets.init();
 		init();
@@ -32,6 +38,7 @@ public class DoremonJump extends ApplicationAdapter {
 	public void init() {
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 
 		handler = new Handler(this);
 		gsm = new GameStateManager();
@@ -52,7 +59,11 @@ public class DoremonJump extends ApplicationAdapter {
 	public void dispose() {
 		batch.dispose();
 		gsm.dispose();
-//        Assets.dispose();
+        Assets.dispose();
+	}
+
+	public static OrthographicCamera getCamera() {
+		return camera;
 	}
 
 	public int getHeight() {

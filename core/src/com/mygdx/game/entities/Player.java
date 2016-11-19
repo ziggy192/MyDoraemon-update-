@@ -2,9 +2,11 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.mygdx.game.gfx.Assets;
 import com.mygdx.game.main.Handler;
 
@@ -12,6 +14,8 @@ import com.mygdx.game.main.Handler;
 public class Player extends Entity {
     public static final int PLAYER_WIDTH = 130;
     public static final int PLAYER_HEIGHT = 130;
+    private static final float HORIZONTAL_VELOCITY_LIMIT = 10;
+
 
     public static float GRAVITY = 0.25f;
     public static int JUMP = -14;
@@ -22,6 +26,10 @@ public class Player extends Entity {
     private String dir;
     private boolean dead = false;
     private float angle = 0;
+
+    private Sound jumpSound;
+    private Sound flyHighSound;
+    private Sound deadSound;
 
 
     public static Player generate(Handler handler) {
@@ -41,6 +49,10 @@ public class Player extends Entity {
         this.isMovingLeft = false;
         this.isMovingRight = false;
 
+        jumpSound = Gdx.audio.newSound(Gdx.files.internal("Jump5.wav"));
+        flyHighSound = Gdx.audio.newSound(Gdx.files.internal("Powerup5.wav"));
+        deadSound = Gdx.audio.newSound(Gdx.files.internal("Man Screaming Sound Effect.wav"));
+
     }
 
     @Override
@@ -54,6 +66,7 @@ public class Player extends Entity {
                 && (this.y + this.height > handler.getHeight())
                 && !dead) {
             this.setDead(true);
+            deadSound.play(0.5f);
         }
         updateBounds();
     }
@@ -113,6 +126,15 @@ public class Player extends Entity {
     }
 
     private void playerMove() {
+
+        if (Math.abs(vx) > HORIZONTAL_VELOCITY_LIMIT) {
+            if (vx < 0) {
+                vx = HORIZONTAL_VELOCITY_LIMIT * -1;
+            } else {
+                vx = HORIZONTAL_VELOCITY_LIMIT;
+            }
+
+        }
         // Moving back and forth with acceleration
         if (isMovingLeft) {
             this.x += this.vx;
@@ -140,6 +162,7 @@ public class Player extends Entity {
         } else if (this.x < 0 - this.width) {
             this.x = handler.getWidth();
         }
+
     }
 
     public void playerJump() {
@@ -158,10 +181,12 @@ public class Player extends Entity {
     }
 
     public void jump() {
+        jumpSound.play(0.2f);
         this.vy = JUMP;
     }
 
     public void jumpHigh() {
+        flyHighSound.play();
         this.vy = JUMP_HIGH;
     }
 
@@ -187,8 +212,14 @@ public class Player extends Entity {
                 this.height += 3;
         }
         batch.draw(sprite,
-                (int) this.x, (int) this.y,
+                 this.x,  this.y,
+////                getSceneWidth() / 2, getSceneHeight() / 2, this.getSceneWidth(), this.getSceneHeight(), 1, 1, angle);
                 width / 2, height / 2, this.width, this.height, 1, 1, angle);
+
+//                 x * handler.getWorld_to_scene_width(),
+//                y * handler.getWorld_to_scene_height(),
+//                width * handler.getWorld_to_scene_width(),
+//                height * handler.getWorld_to_scene_height());
     }
 
     public TextureRegion getCurrentFrame() {
@@ -251,6 +282,8 @@ public class Player extends Entity {
     }
 
     public void dispose() {
-
+        jumpSound.dispose();
+        flyHighSound.dispose();
+        deadSound.dispose();
     }
 }

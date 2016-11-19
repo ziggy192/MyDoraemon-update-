@@ -60,9 +60,18 @@ public class Platform extends Entity {
         }
 
         Sprite sprite = new Sprite(getCurrentFrame());
+//        batch.draw(sprite,
+//                (int) this.x, (int) this.y,
+//                getSceneWidth(), getSceneHeight());
+
         batch.draw(sprite,
-                (int) this.x, (int) this.y,
+                this.x, this.y,
                 this.width, this.height);
+//        batch.draw(sprite,
+//                x * handler.getWorld_to_scene_width(),
+//                y * handler.getWorld_to_scene_height(),
+//                width * handler.getWorld_to_scene_width(),
+//                height * handler.getWorld_to_scene_height());
         item.render(batch);
     }
 

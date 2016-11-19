@@ -28,6 +28,12 @@ public class Base extends Entity {
     @Override
     public void render(SpriteBatch batch) {
         batch.draw(Assets.base, x, y, width, height);
+//        batch.draw(Assets.base, x * handler.getWorld_to_scene_width(),
+//                y * handler.getWorld_to_scene_height(),
+//                width * handler.getWorld_to_scene_width(),
+//                height * handler.getWorld_to_scene_height());
+
+//        batch.draw(Assets.base, x, y, getSceneWidth(), getSceneHeight());
     }
 
     public void dispose() {

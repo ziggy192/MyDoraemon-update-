@@ -23,6 +23,8 @@ public abstract class Entity {
         this.y = y;
         this.width = width;
         this.height = height;
+//        this.width = (int)(width * handler.getWorld_to_scene_width());
+//        this.height = (int)(height * handler.getWorld_to_scene_height());
         bounds = new Rectangle(x, y, width, height);
 
     }
@@ -93,6 +95,14 @@ public abstract class Entity {
 
     public Vector2 getMiddleLocationVector() {
         return new Vector2(getMiddleX(), getMiddleY());
+    }
+
+    public float getSceneWidth() {
+        return width * handler.getWorld_to_scene_width();
+    }
+
+    public float getSceneHeight() {
+        return height * handler.getWorld_to_scene_height();
     }
 
 

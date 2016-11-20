@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.gfx.Assets;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.MenuState;
@@ -14,16 +17,17 @@ public class DoremonJump extends ApplicationAdapter {
 	public static OrthographicCamera camera;
 	public static int bestScore = 0;
 
-	protected int WIDTH;
-	protected int HEIGHT;
+	public static final int WORLD_WIDTH = 720;
+	public static final int WORLD_HEIGHT  = 1280;
 	private GameStateManager gsm;
 	private SpriteBatch batch;
 	private Handler handler;
 
+	private Viewport viewport;
+
+
 	@Override
 	public void create() {
-		WIDTH = Gdx.graphics.getWidth();
-		HEIGHT = Gdx.graphics.getHeight();
 
 		//debuging
 //		WIDTH = 400;
@@ -35,10 +39,22 @@ public class DoremonJump extends ApplicationAdapter {
 		init();
 	}
 
-	public void init() {
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2,0);
+	}
 
+	public void init() {
+//		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera = new OrthographicCamera();
+		camera.setToOrtho(true);
+
+		viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+		viewport.apply();
+
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2,0);
 
 		handler = new Handler(this);
 		gsm = new GameStateManager();
@@ -67,10 +83,10 @@ public class DoremonJump extends ApplicationAdapter {
 	}
 
 	public int getHeight() {
-		return HEIGHT;
+		return WORLD_HEIGHT;
 	}
 
 	public int getWidth() {
-		return WIDTH;
+		return WORLD_WIDTH;
 	}
 }

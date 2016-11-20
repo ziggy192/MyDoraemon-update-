@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.entities.Base;
 import com.mygdx.game.entities.FlyingItem;
+import com.mygdx.game.entities.FlyingItemManager;
 import com.mygdx.game.entities.Item;
 import com.mygdx.game.entities.Platform;
 import com.mygdx.game.entities.PlatformBroken;
@@ -84,19 +85,11 @@ public class World {
     }
 
     private void instancesTick() {
-        FlyingItem.instance.tick();
+        FlyingItemManager.instance.tick();
+//        FlyingItem.instance.tick();
     }
 
-    private void showAnRandomItem() {
-        //spawn an item on a random platform which is not having a spring
-        int randomPosition;
-        do {
 
-            randomPosition = (int) (Math.random() * platforms.size());
-        }
-        while (randomPosition == DEFAULT_PLATFORM_POSITION_WITH_SPRING);
-        platforms.get(randomPosition).getItem().setAlive(true);
-    }
 
     public void render(SpriteBatch batch) {
         batch.draw(background, 0, 0, handler.getWidth(), handler.getHeight());
@@ -128,35 +121,21 @@ public class World {
     }
 
     private void instancesRender(SpriteBatch batch) {
-        FlyingItem.instance.render(batch);
+        FlyingItemManager.instance.render(batch);
+//        FlyingItem.instance.render(batch);
     }
 
-    private void createSpring() {
-        // attach spring to the platform of index 0
-        Platform p = platforms.get(DEFAULT_PLATFORM_POSITION_WITH_SPRING);
-        if (p.getType() == 1 || p.getType() == 3 || p.getType() == 2) {
-            spring.setX(p.getX() + p.getWidth() / 2 - spring.getWidth() / 2);
-            spring.setY(p.getY() - p.getHeight());
-            spring.setAppear(true);
 
-            if (spring.getY() > handler.getHeight() / 1.1 || p.getFlag() == 1) {
-//                spring.setState(0);
-                spring.setAppear(false);
-            }
-        } else {
-            // if not the specified type, remove the spring
-
-            spring.setX(0 - spring.getX());
-            spring.setY(0 - spring.getY());
-        }
-    }
 
     private void platformScrolling() {
         // create a illusion of scrolling when player reach above half screen
         if (player.getY() >= handler.getHeight() / 2 - player.getHeight() / 2) {
             return;
         }
-        for (Platform platform : platforms) {
+        for (int position = 0; position<platforms.size();position++) {
+            Platform platform = platforms.get(position);
+
+//        for (Platform platform : platforms) {
 
             // move the platform downward while player get higher
 
@@ -180,7 +159,7 @@ public class World {
                 //new
                 platform.getItem().getNewRandomType();
 
-                if (countItemTime >= TIME_TO_SHOW_AN_ITEM) {
+                if (countItemTime >= TIME_TO_SHOW_AN_ITEM && position != DEFAULT_PLATFORM_POSITION_WITH_SPRING) {
                     countItemTime = 0;
                     platform.showItem();
                 }
@@ -226,17 +205,10 @@ public class World {
                 //debug
 
                 item.setAlive(false);
-                FlyingItem.trigger(handler, item, player);
+                FlyingItemManager.instance.spawn(handler,item,player);
+//                FlyingItem.trigger(handler, item, player);
             }
 
-//            if (player.getBounds().overlaps(item.getBounds())
-//                    && item.isAlive()) {
-//                System.out.println("Got " + item);
-//                item.setAlive(false);
-//                FlyingItem.trigger(handler,item,player);
-//            }
-
-            // overlap with circle range
 
 
             // collides with platforms
@@ -248,6 +220,8 @@ public class World {
                     < platform.getY() + platform.getHeight())) {
 
                 if (platform.getType() == 2 && platform.getFlag() == 0) {
+                    //break platform
+                    player.breakPlatform();
                     platform.setFlag(1);
                     platform.setState(1);
                     return;
@@ -312,10 +286,13 @@ public class World {
     }
 
     private void destroyInstances() {
-        FlyingItem.instance.setAlive(false);
+        FlyingItemManager.instance.refresh();
+//        FlyingItem.instance.setAlive(false);
     }
 
     private void loadWorld() {
+
+        initInstances();
         base = Base.generate(handler);
         player = Player.generate(handler);
 
@@ -348,6 +325,10 @@ public class World {
         font = generator.generateFont(parameter);
         font.setColor(Color.WHITE);
         generator.dispose();
+    }
+
+    private void initInstances() {
+        FlyingItemManager.instance.init();
     }
 
     public int getCountOf(int TIME_TO_SHOW_AN_ITEM) {
@@ -399,7 +380,8 @@ public class World {
             platform.dispose();
         }
         font.dispose();
-        FlyingItem.instance.dispose();
+        FlyingItemManager.instance.dispose();
+//        FlyingItem.instance.dispose();
 
     }
 

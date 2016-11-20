@@ -97,14 +97,6 @@ public abstract class Entity {
         return new Vector2(getMiddleX(), getMiddleY());
     }
 
-    public float getSceneWidth() {
-        return width * handler.getWorld_to_scene_width();
-    }
-
-    public float getSceneHeight() {
-        return height * handler.getWorld_to_scene_height();
-    }
-
 
 
 }

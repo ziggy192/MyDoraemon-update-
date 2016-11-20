@@ -1,6 +1,7 @@
 package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
@@ -15,7 +16,7 @@ import com.mygdx.game.main.Handler;
 
 public class FlyingItem extends Entity {
 
-    private static final int SPEED = 5;
+    private static final int SPEED = 10;
     private static final float DEFAULT_COLLISION_BOUNDS_SCALE = 0.5f;
     private static final float DEFAULT_TARGET_COLISSION_RANGE = 20f;
     private static final int DEFAULT_BOUNUS = 200;
@@ -30,7 +31,7 @@ public class FlyingItem extends Entity {
     private Vector2 velocity;
     boolean alive;
 
-    private Sound pickUpSound;
+
 
 
     public FlyingItem() {
@@ -48,7 +49,7 @@ public class FlyingItem extends Entity {
         flyingBounds = new Circle(x, y, itemTriggered.getWidth() / 2);
         targetBounds = new Circle(target.getMiddleX(), target.getMiddleY(), DEFAULT_TARGET_COLISSION_RANGE);
 
-        pickUpSound = Gdx.audio.newSound(Gdx.files.internal("Pickup_Coin.wav"));
+//        pickUpSound = Gdx.audio.newSound(Gdx.files.internal("Pickup_Coin.wav"));
 
         alive = isAlive;
     }
@@ -83,11 +84,9 @@ public class FlyingItem extends Entity {
             this.move(velocity);
             updateFlyingBounds();
             updateTargetBounds();
-//            updateBounds();
-//            if (this.bounds.overlaps(getTargetCollisionBounds(target))) {
             if (this.flyingBounds.overlaps(targetBounds))
             {
-                pickUpSound.play(0.5f);
+                FlyingItemManager.pickUpSound.play(0.5f);
 
                 handler.getWorld().addScore(DEFAULT_BOUNUS);
 
@@ -131,15 +130,15 @@ public class FlyingItem extends Entity {
         this.alive = alive;
     }
 
-    public static FlyingItem instance = new FlyingItem();
+//    public static FlyingItem instance = new FlyingItem();
 
     public static FlyingItem create(Handler handler, Item itemTriggered, Entity target) {
         return new FlyingItem(handler, itemTriggered, target, true);
     }
 
-    public static void trigger(Handler handler, Item itemTriggered, Entity target) {
-        instance = new FlyingItem(handler, itemTriggered, target, true);
-    }
+//    public static void trigger(Handler handler, Item itemTriggered, Entity target) {
+//        instance = new FlyingItem(handler, itemTriggered, target, true);
+//    }
 
     public void scroll(float vy) {
         if (isAlive())
@@ -147,10 +146,5 @@ public class FlyingItem extends Entity {
     }
 
     public void dispose() {
-        if (pickUpSound != null) {
-
-            pickUpSound.dispose();
-        }
-
     }
 }

@@ -14,11 +14,13 @@ import com.mygdx.game.main.Handler;
 public class Player extends Entity {
     public static final int PLAYER_WIDTH = 130;
     public static final int PLAYER_HEIGHT = 130;
-    private static final float HORIZONTAL_VELOCITY_LIMIT = 10;
+    private static final float HORIZONTAL_VELOCITY_LIMIT = 3;
+    private static final float HORIZONTAL_ACCELERATION = 0.1f;
+    private static final float HORIZONTAL_BRAKE_ACCELEBRATION = 0.075f;
 
 
-    public static float GRAVITY = 0.25f;
-    public static int JUMP = -14;
+    public static float GRAVITY = 0.15f;
+    public static int JUMP = -16;
     public static int JUMP_HIGH = -50;
 
     private float vx, vy;
@@ -30,6 +32,7 @@ public class Player extends Entity {
     private Sound jumpSound;
     private Sound flyHighSound;
     private Sound deadSound;
+    private Sound breakSound;
 
 
     public static Player generate(Handler handler) {
@@ -52,6 +55,7 @@ public class Player extends Entity {
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("Jump5.wav"));
         flyHighSound = Gdx.audio.newSound(Gdx.files.internal("Powerup5.wav"));
         deadSound = Gdx.audio.newSound(Gdx.files.internal("Man Screaming Sound Effect.wav"));
+        breakSound = Gdx.audio.newSound(Gdx.files.internal("platform_break.wav"));
 
     }
 
@@ -94,10 +98,10 @@ public class Player extends Entity {
 //                isMovingLeft = false;
 //            }
 //        }
-        if (accelX >= 2) {
+        if (accelX >= 1) {
             isMovingLeft = true;
             isMovingRight = false;
-        } else if (accelX < -2) {
+        } else if (accelX < -1) {
             isMovingLeft = false;
             isMovingRight = true;
         }
@@ -138,21 +142,21 @@ public class Player extends Entity {
         // Moving back and forth with acceleration
         if (isMovingLeft) {
             this.x += this.vx;
-            this.vx -= 0.20;
+            this.vx -= HORIZONTAL_ACCELERATION;
         } else {
             this.x += this.vx;
             if (this.vx < 0) {
-                this.vx += 0.15;
+                this.vx += HORIZONTAL_BRAKE_ACCELEBRATION;
             }
         }
 
         if (isMovingRight) {
             this.x += this.vx;
-            this.vx += 0.20;
+            this.vx += HORIZONTAL_ACCELERATION;
         } else {
             this.x += this.vx;
             if (this.vx > 0) {
-                this.vx -= 0.15;
+                this.vx -= HORIZONTAL_BRAKE_ACCELEBRATION;
             }
         }
 
@@ -285,5 +289,10 @@ public class Player extends Entity {
         jumpSound.dispose();
         flyHighSound.dispose();
         deadSound.dispose();
+        breakSound.dispose();
+    }
+
+    public void breakPlatform() {
+        breakSound.play();
     }
 }
